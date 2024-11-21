@@ -1,0 +1,10 @@
+/inventorycolor 255
+/inventorycolor 251
+/inventorycolor 51
+/inventorycolor 1
+/inventorycolor 0
+/inventorycolor 50
+/inventorycolor 190
+/inventorycolor #FFFF00
+/inventorycolor 74 50 168
+/inventorycolor 65280
