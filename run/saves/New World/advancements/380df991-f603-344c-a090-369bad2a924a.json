@@ -102,5 +102,17 @@
     },
     "done": true
   },
+  "minecraft:recipes/decorations/chest": {
+    "criteria": {
+      "has_lots_of_items": "2024-11-23 00:23:34 +0100"
+    },
+    "done": true
+  },
+  "minecraft:nether/netherite_armor": {
+    "criteria": {
+      "netherite_armor": "2024-11-23 00:33:24 +0100"
+    },
+    "done": true
+  },
   "DataVersion": 3700
 }

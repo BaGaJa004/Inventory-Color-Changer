@@ -8,3 +8,5 @@
 /inventorycolor #FFFF00
 /inventorycolor 74 50 168
 /inventorycolor 65280
+/time set day
+/gamerule doDaylightCycle false

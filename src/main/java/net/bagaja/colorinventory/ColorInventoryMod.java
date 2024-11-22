@@ -14,6 +14,7 @@ import org.lwjgl.glfw.GLFW;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 
 @Mod("colorinventory")
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.FORGE)
@@ -36,13 +37,17 @@ public class ColorInventoryMod {
     }
 
     @SubscribeEvent
-    public static void onGuiRender(ScreenEvent.Render.Post event) {  // Changed to Post to render after items
-        if (event.getScreen() instanceof InventoryScreen) {
+    public static void onGuiRender(ScreenEvent.Render.Post event) {
+        if (event.getScreen() instanceof InventoryScreen inventoryScreen) {
             GuiGraphics graphics = event.getGuiGraphics();
-            InventoryScreen screen = (InventoryScreen) event.getScreen();
 
-            int x = (screen.width - 176) / 2;
-            int y = (screen.height - 166) / 2;
+            // Get recipe book component
+            RecipeBookComponent recipeBook = inventoryScreen.getRecipeBookComponent();
+
+            // Calculate the x position based on recipe book state
+            int xOffset = recipeBook.isVisible() ? 77 : 0;
+            int x = (inventoryScreen.width - 176) / 2 + xOffset;
+            int y = (inventoryScreen.height - 166) / 2;
 
             // Store the current color state
             float[] prevColor = RenderSystem.getShaderColor().clone();
@@ -51,15 +56,15 @@ public class ColorInventoryMod {
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
 
-            // Draw the colored inventory background
+            // Render our colored overlay
             RenderSystem.setShaderColor(
                     ((inventoryColor >> 16) & 0xFF) / 255.0F,
                     ((inventoryColor >> 8) & 0xFF) / 255.0F,
                     (inventoryColor & 0xFF) / 255.0F,
-                    0.7F  // Added some transparency
+                    0.7F
             );
 
-            // Bind and render the inventory texture
+            // Bind and render the inventory texture at the correct position
             RenderSystem.setShaderTexture(0, INVENTORY_LOCATION);
             graphics.blit(INVENTORY_LOCATION, x, y, 0, 0, 176, 166);
 
