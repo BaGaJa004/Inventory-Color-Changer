@@ -1,109 +1,104 @@
 {
   "minecraft:recipes/decorations/crafting_table": {
     "criteria": {
-      "unlock_right_away": "2024-11-21 23:36:49 +0100"
+      "unlock_right_away": "2024-11-21 23:58:43 +0100"
     },
     "done": true
   },
   "minecraft:adventure/adventuring_time": {
     "criteria": {
-      "minecraft:dark_forest": "2024-11-21 23:36:52 +0100"
+      "minecraft:forest": "2024-11-21 23:58:44 +0100",
+      "minecraft:plains": "2024-11-22 00:00:01 +0100"
     },
     "done": false
   },
-  "minecraft:recipes/building_blocks/dark_oak_slab": {
+  "minecraft:recipes/building_blocks/birch_planks": {
     "criteria": {
-      "has_planks": "2024-11-21 23:43:17 +0100"
-    },
-    "done": true
-  },
-  "minecraft:recipes/building_blocks/dark_oak_planks": {
-    "criteria": {
-      "has_log": "2024-11-21 23:42:32 +0100"
-    },
-    "done": true
-  },
-  "minecraft:recipes/redstone/dark_oak_door": {
-    "criteria": {
-      "has_planks": "2024-11-21 23:43:17 +0100"
-    },
-    "done": true
-  },
-  "minecraft:recipes/redstone/dark_oak_fence_gate": {
-    "criteria": {
-      "has_planks": "2024-11-21 23:43:17 +0100"
-    },
-    "done": true
-  },
-  "minecraft:recipes/redstone/dark_oak_trapdoor": {
-    "criteria": {
-      "has_planks": "2024-11-21 23:43:17 +0100"
+      "has_logs": "2024-11-22 00:01:34 +0100"
     },
     "done": true
   },
   "minecraft:recipes/misc/charcoal": {
     "criteria": {
-      "has_log": "2024-11-21 23:42:32 +0100"
+      "has_log": "2024-11-22 00:01:34 +0100"
     },
     "done": true
   },
-  "minecraft:recipes/building_blocks/dark_oak_wood": {
+  "minecraft:recipes/building_blocks/birch_wood": {
     "criteria": {
-      "has_log": "2024-11-21 23:42:32 +0100"
+      "has_log": "2024-11-22 00:01:34 +0100"
     },
     "done": true
   },
-  "minecraft:recipes/decorations/chest": {
+  "minecraft:recipes/redstone/birch_button": {
     "criteria": {
-      "has_the_recipe": "2024-11-21 23:43:57 +0100"
+      "has_planks": "2024-11-22 00:02:27 +0100"
     },
     "done": true
   },
-  "minecraft:recipes/redstone/dark_oak_button": {
+  "minecraft:recipes/redstone/birch_door": {
     "criteria": {
-      "has_planks": "2024-11-21 23:43:17 +0100"
+      "has_planks": "2024-11-22 00:02:27 +0100"
+    },
+    "done": true
+  },
+  "minecraft:recipes/decorations/birch_fence": {
+    "criteria": {
+      "has_planks": "2024-11-22 00:02:27 +0100"
+    },
+    "done": true
+  },
+  "minecraft:recipes/redstone/birch_trapdoor": {
+    "criteria": {
+      "has_planks": "2024-11-22 00:02:27 +0100"
     },
     "done": true
   },
   "minecraft:recipes/misc/stick": {
     "criteria": {
-      "has_planks": "2024-11-21 23:43:17 +0100"
+      "has_planks": "2024-11-22 00:02:27 +0100"
+    },
+    "done": true
+  },
+  "minecraft:recipes/decorations/birch_sign": {
+    "criteria": {
+      "has_planks": "2024-11-22 00:02:27 +0100"
+    },
+    "done": true
+  },
+  "minecraft:recipes/redstone/birch_fence_gate": {
+    "criteria": {
+      "has_planks": "2024-11-22 00:02:27 +0100"
     },
     "done": true
   },
   "minecraft:recipes/decorations/barrel": {
     "criteria": {
-      "has_planks": "2024-11-21 23:43:17 +0100"
+      "has_planks": "2024-11-22 00:02:27 +0100"
     },
     "done": true
   },
-  "minecraft:recipes/building_blocks/dark_oak_stairs": {
+  "minecraft:recipes/redstone/birch_pressure_plate": {
     "criteria": {
-      "has_planks": "2024-11-21 23:43:17 +0100"
+      "has_planks": "2024-11-22 00:02:27 +0100"
     },
     "done": true
   },
-  "minecraft:recipes/decorations/dark_oak_sign": {
+  "minecraft:recipes/building_blocks/birch_slab": {
     "criteria": {
-      "has_planks": "2024-11-21 23:43:17 +0100"
+      "has_planks": "2024-11-22 00:02:27 +0100"
+    },
+    "done": true
+  },
+  "minecraft:recipes/building_blocks/birch_stairs": {
+    "criteria": {
+      "has_planks": "2024-11-22 00:02:27 +0100"
     },
     "done": true
   },
   "minecraft:story/root": {
     "criteria": {
-      "crafting_table": "2024-11-21 23:43:24 +0100"
-    },
-    "done": true
-  },
-  "minecraft:recipes/redstone/dark_oak_pressure_plate": {
-    "criteria": {
-      "has_planks": "2024-11-21 23:43:17 +0100"
-    },
-    "done": true
-  },
-  "minecraft:recipes/decorations/dark_oak_fence": {
-    "criteria": {
-      "has_planks": "2024-11-21 23:43:17 +0100"
+      "crafting_table": "2024-11-22 00:02:38 +0100"
     },
     "done": true
   },
