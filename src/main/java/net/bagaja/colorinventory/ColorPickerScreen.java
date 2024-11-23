@@ -12,7 +12,7 @@ public class ColorPickerScreen extends Screen {
     private ColorSlider greenSlider;
     private ColorSlider blueSlider;
     private int currentColor;
-    private static final int DEFAULT_COLOR = 0xFF0000; // Default red color
+    private static final int DEFAULT_COLOR = 0xFF0000;
 
     public ColorPickerScreen(Screen lastScreen) {
         super(Component.literal("Color Picker"));
@@ -93,15 +93,16 @@ public class ColorPickerScreen extends Screen {
         this.addRenderableWidget(blueSlider);
 
         // Center the buttons
-        int buttonWidth = 98;
+        int buttonWidth = 75;
         int buttonSpacing = 8;
-        int totalButtonsWidth = (buttonWidth * 3) + (buttonSpacing * 2);
+        int totalButtonsWidth = (buttonWidth * 4) + (buttonSpacing * 3);
         int buttonsStartX = this.width / 2 - totalButtonsWidth / 2;
 
         // Apply button
         this.addRenderableWidget(Button.builder(Component.literal("Apply"), button -> {
             updateColor();
             ColorInventoryMod.setInventoryColor(currentColor);
+            ColorInventoryMod.setOverlayEnabled(true); // Enable overlay when applying color
             this.minecraft.setScreen(lastScreen);
         }).pos(buttonsStartX, this.height / 2 + 80).size(buttonWidth, 20).build());
 
@@ -110,10 +111,19 @@ public class ColorPickerScreen extends Screen {
             resetToDefault();
         }).pos(buttonsStartX + buttonWidth + buttonSpacing, this.height / 2 + 80).size(buttonWidth, 20).build());
 
+        // Toggle button
+        this.addRenderableWidget(Button.builder(
+                Component.literal(ColorInventoryMod.isOverlayEnabled() ? "Disable" : "Enable"),
+                button -> {
+                    ColorInventoryMod.toggleOverlay();
+                    button.setMessage(Component.literal(ColorInventoryMod.isOverlayEnabled() ? "Disable" : "Enable"));
+                }
+        ).pos(buttonsStartX + (buttonWidth + buttonSpacing) * 2, this.height / 2 + 80).size(buttonWidth, 20).build());
+
         // Cancel button
         this.addRenderableWidget(Button.builder(Component.literal("Cancel"), button -> {
             this.minecraft.setScreen(lastScreen);
-        }).pos(buttonsStartX + (buttonWidth + buttonSpacing) * 2, this.height / 2 + 80).size(buttonWidth, 20).build());
+        }).pos(buttonsStartX + (buttonWidth + buttonSpacing) * 3, this.height / 2 + 80).size(buttonWidth, 20).build());
     }
 
     private void resetToDefault() {

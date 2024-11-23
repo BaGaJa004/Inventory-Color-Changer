@@ -24,6 +24,7 @@ import net.minecraftforge.fml.config.ModConfig;
 public class ColorInventoryMod {
     public static final String MODID = "colorinventory";
     private static int inventoryColor = 0xFF0000; // Default red color
+    private static boolean overlayEnabled = true; // Default enabled
     private static final ResourceLocation INVENTORY_LOCATION =
             new ResourceLocation("textures/gui/container/inventory.png");
     private static final ResourceLocation RECIPE_BUTTON_LOCATION =
@@ -43,9 +44,13 @@ public class ColorInventoryMod {
             "key.categories.colorinventory"
     );
 
+    public static final KeyMapping TOGGLE_OVERLAY_KEY = new KeyMapping(
+            "key.colorinventory.toggle",
+            GLFW.GLFW_KEY_O,
+            "key.categories.colorinventory"
+    );
     public ColorInventoryMod() {
         MinecraftForge.EVENT_BUS.register(this);
-        // Register the config
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.SPEC);
     }
 
@@ -53,8 +58,15 @@ public class ColorInventoryMod {
         return inventoryColor;
     }
 
+    public static boolean isOverlayEnabled() {
+        return overlayEnabled;
+    }
+
+
     @SubscribeEvent
     public static void onGuiRender(ScreenEvent.Render.Post event) {
+        if (!overlayEnabled) return; // Skip rendering if overlay is disabled
+
         if (event.getScreen() instanceof InventoryScreen inventoryScreen) {
             GuiGraphics graphics = event.getGuiGraphics();
 
@@ -81,16 +93,14 @@ public class ColorInventoryMod {
                     0.7F
             );
 
-            // Bind and render the inventory texture at the correct position
-            RenderSystem.setShaderTexture(0, INVENTORY_LOCATION);
             // Main inventory area
+            RenderSystem.setShaderTexture(0, INVENTORY_LOCATION);
             graphics.blit(INVENTORY_LOCATION, x, y, 0, 0, 176, 166);
 
             // Restore original color state
             RenderSystem.setShaderColor(prevColor[0], prevColor[1], prevColor[2], prevColor[3]);
 
             // Re-render the armor slot icons above the colored overlay
-            // Only render if the slot is empty (no armor item present)
             int armorX = x + 8;
             int armorY = y + 8;
 
@@ -143,9 +153,19 @@ public class ColorInventoryMod {
         Config.saveColor(color);
     }
 
+    public static void setOverlayEnabled(boolean enabled) {
+        overlayEnabled = enabled;
+        Config.saveOverlayEnabled(enabled);
+    }
+
+    public static void toggleOverlay() {
+        setOverlayEnabled(!overlayEnabled);
+    }
+
     @SubscribeEvent
     public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
         event.register(COLOR_PICKER_KEY);
+        event.register(TOGGLE_OVERLAY_KEY);
     }
 
     @SubscribeEvent
@@ -154,6 +174,9 @@ public class ColorInventoryMod {
             Minecraft minecraft = Minecraft.getInstance();
             if (COLOR_PICKER_KEY.consumeClick() && minecraft.player != null) {
                 minecraft.setScreen(new ColorPickerScreen(minecraft.screen));
+            }
+            if (TOGGLE_OVERLAY_KEY.consumeClick() && minecraft.player != null) {
+                toggleOverlay();
             }
         }
     }
