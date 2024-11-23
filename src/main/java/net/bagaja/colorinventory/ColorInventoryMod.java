@@ -71,6 +71,7 @@ public class ColorInventoryMod {
 
             // Bind and render the inventory texture at the correct position
             RenderSystem.setShaderTexture(0, INVENTORY_LOCATION);
+            // Main inventory area
             graphics.blit(INVENTORY_LOCATION, x, y, 0, 0, 176, 166);
 
             // Restore original color state before rendering the recipe button
@@ -78,7 +79,7 @@ public class ColorInventoryMod {
 
             // Re-render the recipe book button on top
             RenderSystem.setShaderTexture(0, RECIPE_BUTTON_LOCATION);
-            int buttonX = x + 104;  // Position relative to the current inventory position
+            int buttonX = x + 104;
             int buttonY = y + 61;
             graphics.blit(RECIPE_BUTTON_LOCATION, buttonX, buttonY, 0, 0, 20, 18, 20, 18);
 
