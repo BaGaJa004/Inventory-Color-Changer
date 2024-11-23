@@ -124,8 +124,13 @@ public class ColorPickerScreen extends Screen {
         // Draw color preview
         int previewX = this.width / 2 - 50;
         int previewY = this.height / 2 - 90;
-        graphics.fill(previewX, previewY, previewX + 100, previewY + 30, currentColor | 0xFF000000);
+
+        // Draw white border
         graphics.fill(previewX - 1, previewY - 1, previewX + 101, previewY + 31, 0xFFFFFFFF);
+
+        // Draw the current color with full opacity
+        int colorWithAlpha = 0xFF000000 | currentColor; // Force full opacity
+        graphics.fill(previewX, previewY, previewX + 100, previewY + 30, colorWithAlpha);
     }
 
     @Override
