@@ -86,15 +86,21 @@ public class ColorPickerScreen extends Screen {
         this.addRenderableWidget(greenSlider);
         this.addRenderableWidget(blueSlider);
 
+        // Center the buttons by calculating their positions relative to the center
+        int buttonWidth = 100;
+        int buttonSpacing = 10; // Space between buttons
+        int totalButtonsWidth = (buttonWidth * 2) + buttonSpacing;
+        int buttonsStartX = this.width / 2 - totalButtonsWidth / 2;
+
         this.addRenderableWidget(Button.builder(Component.literal("Apply"), button -> {
             updateColor();
             ColorInventoryMod.setInventoryColor(currentColor);
             this.minecraft.setScreen(lastScreen);
-        }).pos(centerX - 105, this.height / 2 + 80).size(100, 20).build());
+        }).pos(buttonsStartX, this.height / 2 + 80).size(buttonWidth, 20).build());
 
         this.addRenderableWidget(Button.builder(Component.literal("Cancel"), button -> {
             this.minecraft.setScreen(lastScreen);
-        }).pos(centerX + 5, this.height / 2 + 80).size(100, 20).build());
+        }).pos(buttonsStartX + buttonWidth + buttonSpacing, this.height / 2 + 80).size(buttonWidth, 20).build());
     }
 
     private void updateColor() {
