@@ -15,6 +15,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
+import net.minecraft.network.chat.Component;
 
 @Mod("colorinventory")
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.FORGE)
@@ -76,12 +77,16 @@ public class ColorInventoryMod {
             RenderSystem.setShaderColor(prevColor[0], prevColor[1], prevColor[2], prevColor[3]);
 
             // Re-render the recipe book button on top
-            if (!recipeBook.isVisible()) {
-                RenderSystem.setShaderTexture(0, RECIPE_BUTTON_LOCATION);
-                int buttonX = x + 104;
-                int buttonY = y + 61;
-                graphics.blit(RECIPE_BUTTON_LOCATION, buttonX, buttonY, 0, 0, 20, 18, 20, 18);
-            }
+            RenderSystem.setShaderTexture(0, RECIPE_BUTTON_LOCATION);
+            int buttonX = x + 104;  // Position relative to the current inventory position
+            int buttonY = y + 61;
+            graphics.blit(RECIPE_BUTTON_LOCATION, buttonX, buttonY, 0, 0, 20, 18, 20, 18);
+
+            // Re-render the "Crafting" text
+            Component craftingText = Component.translatable("container.crafting");
+            graphics.drawString(Minecraft.getInstance().font, craftingText,
+                    x + 97, y + 6, 0x404040, // Default text color
+                    false); // Don't use drop shadow
 
             // Reset blend state
             RenderSystem.disableBlend();
