@@ -16,6 +16,8 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.network.chat.Component;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.config.ModConfig;
 
 @Mod("colorinventory")
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.FORGE)
@@ -43,6 +45,8 @@ public class ColorInventoryMod {
 
     public ColorInventoryMod() {
         MinecraftForge.EVENT_BUS.register(this);
+        // Register the config
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.SPEC);
     }
 
     public static int getInventoryColor() {
@@ -135,6 +139,8 @@ public class ColorInventoryMod {
 
     public static void setInventoryColor(int color) {
         inventoryColor = color;
+        // Save the color to config when it changes
+        Config.saveColor(color);
     }
 
     @SubscribeEvent

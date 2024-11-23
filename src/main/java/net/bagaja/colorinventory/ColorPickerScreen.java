@@ -12,15 +12,14 @@ public class ColorPickerScreen extends Screen {
     private ColorSlider greenSlider;
     private ColorSlider blueSlider;
     private int currentColor;
+    private static final int DEFAULT_COLOR = 0xFF0000; // Default red color
 
     public ColorPickerScreen(Screen lastScreen) {
         super(Component.literal("Color Picker"));
         this.lastScreen = lastScreen;
-        // Initialize with the current inventory color instead of hardcoded red
         this.currentColor = ColorInventoryMod.getInventoryColor();
     }
 
-    // Custom slider class for 1.20.4
     private class ColorSlider extends Button {
         private final String prefix;
         private double value;
@@ -61,6 +60,11 @@ public class ColorPickerScreen extends Screen {
         public double getValue() {
             return value;
         }
+
+        public void setValue(double newValue) {
+            this.value = Mth.clamp(newValue, min, max);
+            updateMessage();
+        }
     }
 
     @Override
@@ -88,21 +92,35 @@ public class ColorPickerScreen extends Screen {
         this.addRenderableWidget(greenSlider);
         this.addRenderableWidget(blueSlider);
 
-        // Center the buttons by calculating their positions relative to the center
-        int buttonWidth = 100;
-        int buttonSpacing = 10; // Space between buttons
-        int totalButtonsWidth = (buttonWidth * 2) + buttonSpacing;
+        // Center the buttons
+        int buttonWidth = 98;
+        int buttonSpacing = 8;
+        int totalButtonsWidth = (buttonWidth * 3) + (buttonSpacing * 2);
         int buttonsStartX = this.width / 2 - totalButtonsWidth / 2;
 
+        // Apply button
         this.addRenderableWidget(Button.builder(Component.literal("Apply"), button -> {
             updateColor();
             ColorInventoryMod.setInventoryColor(currentColor);
             this.minecraft.setScreen(lastScreen);
         }).pos(buttonsStartX, this.height / 2 + 80).size(buttonWidth, 20).build());
 
+        // Reset button
+        this.addRenderableWidget(Button.builder(Component.literal("Reset"), button -> {
+            resetToDefault();
+        }).pos(buttonsStartX + buttonWidth + buttonSpacing, this.height / 2 + 80).size(buttonWidth, 20).build());
+
+        // Cancel button
         this.addRenderableWidget(Button.builder(Component.literal("Cancel"), button -> {
             this.minecraft.setScreen(lastScreen);
-        }).pos(buttonsStartX + buttonWidth + buttonSpacing, this.height / 2 + 80).size(buttonWidth, 20).build());
+        }).pos(buttonsStartX + (buttonWidth + buttonSpacing) * 2, this.height / 2 + 80).size(buttonWidth, 20).build());
+    }
+
+    private void resetToDefault() {
+        redSlider.setValue((DEFAULT_COLOR >> 16) & 0xFF);
+        greenSlider.setValue((DEFAULT_COLOR >> 8) & 0xFF);
+        blueSlider.setValue(DEFAULT_COLOR & 0xFF);
+        currentColor = DEFAULT_COLOR;
     }
 
     private void updateColor() {
