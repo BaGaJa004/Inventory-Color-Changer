@@ -11,11 +11,13 @@ public class ColorPickerScreen extends Screen {
     private ColorSlider redSlider;
     private ColorSlider greenSlider;
     private ColorSlider blueSlider;
-    private int currentColor = 0xFF0000;
+    private int currentColor;
 
     public ColorPickerScreen(Screen lastScreen) {
         super(Component.literal("Color Picker"));
         this.lastScreen = lastScreen;
+        // Initialize with the current inventory color instead of hardcoded red
+        this.currentColor = ColorInventoryMod.getInventoryColor();
     }
 
     // Custom slider class for 1.20.4

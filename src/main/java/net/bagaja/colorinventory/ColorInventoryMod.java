@@ -36,6 +36,10 @@ public class ColorInventoryMod {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
+    public static int getInventoryColor() {
+        return inventoryColor;
+    }
+
     @SubscribeEvent
     public static void onGuiRender(ScreenEvent.Render.Post event) {
         if (event.getScreen() instanceof InventoryScreen inventoryScreen) {
@@ -49,14 +53,14 @@ public class ColorInventoryMod {
             int x = (inventoryScreen.width - 176) / 2 + xOffset;
             int y = (inventoryScreen.height - 166) / 2;
 
-            // Store the current color state
+            // Store the current color and blend state
             float[] prevColor = RenderSystem.getShaderColor().clone();
 
             // Setup rendering state
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
 
-            // Render our colored overlay
+            // Render colored overlay
             RenderSystem.setShaderColor(
                     ((inventoryColor >> 16) & 0xFF) / 255.0F,
                     ((inventoryColor >> 8) & 0xFF) / 255.0F,
@@ -68,8 +72,18 @@ public class ColorInventoryMod {
             RenderSystem.setShaderTexture(0, INVENTORY_LOCATION);
             graphics.blit(INVENTORY_LOCATION, x, y, 0, 0, 176, 166);
 
-            // Restore the previous color state
+            // Restore original color state before rendering the recipe button
             RenderSystem.setShaderColor(prevColor[0], prevColor[1], prevColor[2], prevColor[3]);
+
+            // Re-render the recipe book button on top
+            if (!recipeBook.isVisible()) {
+                RenderSystem.setShaderTexture(0, RECIPE_BUTTON_LOCATION);
+                int buttonX = x + 104;
+                int buttonY = y + 4;
+                int u = 0;
+                int v = recipeBook.isVisible() ? 27 : 0;
+                graphics.blit(RECIPE_BUTTON_LOCATION, buttonX, buttonY, u, v, 20, 18);
+            }
 
             // Reset blend state
             RenderSystem.disableBlend();
