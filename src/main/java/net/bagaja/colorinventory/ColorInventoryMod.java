@@ -26,6 +26,14 @@ public class ColorInventoryMod {
             new ResourceLocation("textures/gui/container/inventory.png");
     private static final ResourceLocation RECIPE_BUTTON_LOCATION =
             new ResourceLocation("textures/gui/sprites/recipe_book/button.png");
+    private static final ResourceLocation EMPTY_ARMOR_SLOT_HELMET =
+            new ResourceLocation("textures/item/empty_armor_slot_helmet.png");
+    private static final ResourceLocation EMPTY_ARMOR_SLOT_CHESTPLATE =
+            new ResourceLocation("textures/item/empty_armor_slot_chestplate.png");
+    private static final ResourceLocation EMPTY_ARMOR_SLOT_LEGGINGS =
+            new ResourceLocation("textures/item/empty_armor_slot_leggings.png");
+    private static final ResourceLocation EMPTY_ARMOR_SLOT_BOOTS =
+            new ResourceLocation("textures/item/empty_armor_slot_boots.png");
 
     public static final KeyMapping COLOR_PICKER_KEY = new KeyMapping(
             "key.colorinventory.picker",
@@ -74,8 +82,39 @@ public class ColorInventoryMod {
             // Main inventory area
             graphics.blit(INVENTORY_LOCATION, x, y, 0, 0, 176, 166);
 
-            // Restore original color state before rendering the recipe button
+            // Restore original color state
             RenderSystem.setShaderColor(prevColor[0], prevColor[1], prevColor[2], prevColor[3]);
+
+            // Re-render the armor slot icons above the colored overlay
+            // Only render if the slot is empty (no armor item present)
+            int armorX = x + 8;
+            int armorY = y + 8;
+
+            if (Minecraft.getInstance().player != null) {
+                // Helmet slot
+                if (Minecraft.getInstance().player.getInventory().getArmor(3).isEmpty()) {
+                    RenderSystem.setShaderTexture(0, EMPTY_ARMOR_SLOT_HELMET);
+                    graphics.blit(EMPTY_ARMOR_SLOT_HELMET, armorX, armorY, 0, 0, 16, 16, 16, 16);
+                }
+
+                // Chestplate slot
+                if (Minecraft.getInstance().player.getInventory().getArmor(2).isEmpty()) {
+                    RenderSystem.setShaderTexture(0, EMPTY_ARMOR_SLOT_CHESTPLATE);
+                    graphics.blit(EMPTY_ARMOR_SLOT_CHESTPLATE, armorX, armorY + 18, 0, 0, 16, 16, 16, 16);
+                }
+
+                // Leggings slot
+                if (Minecraft.getInstance().player.getInventory().getArmor(1).isEmpty()) {
+                    RenderSystem.setShaderTexture(0, EMPTY_ARMOR_SLOT_LEGGINGS);
+                    graphics.blit(EMPTY_ARMOR_SLOT_LEGGINGS, armorX, armorY + 36, 0, 0, 16, 16, 16, 16);
+                }
+
+                // Boots slot
+                if (Minecraft.getInstance().player.getInventory().getArmor(0).isEmpty()) {
+                    RenderSystem.setShaderTexture(0, EMPTY_ARMOR_SLOT_BOOTS);
+                    graphics.blit(EMPTY_ARMOR_SLOT_BOOTS, armorX, armorY + 54, 0, 0, 16, 16, 16, 16);
+                }
+            }
 
             // Re-render the recipe book button on top
             RenderSystem.setShaderTexture(0, RECIPE_BUTTON_LOCATION);
