@@ -24,7 +24,7 @@ public class ColorInventoryMod {
     private static final ResourceLocation INVENTORY_LOCATION =
             new ResourceLocation("textures/gui/container/inventory.png");
     private static final ResourceLocation RECIPE_BUTTON_LOCATION =
-            new ResourceLocation("textures/gui/recipe_button.png");
+            new ResourceLocation("textures/gui/sprites/recipe_book/button.png");
 
     public static final KeyMapping COLOR_PICKER_KEY = new KeyMapping(
             "key.colorinventory.picker",
@@ -79,10 +79,8 @@ public class ColorInventoryMod {
             if (!recipeBook.isVisible()) {
                 RenderSystem.setShaderTexture(0, RECIPE_BUTTON_LOCATION);
                 int buttonX = x + 104;
-                int buttonY = y + 4;
-                int u = 0;
-                int v = recipeBook.isVisible() ? 27 : 0;
-                graphics.blit(RECIPE_BUTTON_LOCATION, buttonX, buttonY, u, v, 20, 18);
+                int buttonY = y + 61;
+                graphics.blit(RECIPE_BUTTON_LOCATION, buttonX, buttonY, 0, 0, 20, 18, 20, 18);
             }
 
             // Reset blend state
