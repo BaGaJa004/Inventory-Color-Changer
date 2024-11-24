@@ -1,5 +1,7 @@
 package net.bagaja.colorinventory;
 
+import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.client.event.ScreenEvent;
@@ -19,6 +21,7 @@ import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
+import java.util.Iterator;
 
 @Mod("colorinventory")
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.FORGE)
@@ -43,7 +46,6 @@ public class ColorInventoryMod {
             new ResourceLocation("textures/item/empty_armor_slot_boots.png");
     private static final ResourceLocation EMPTY_SLOT_SHIELD =
             new ResourceLocation("textures/item/empty_armor_slot_shield.png");
-
     private static final ResourceLocation TRANSPARENT_INVENTORY_LOCATION =
             new ResourceLocation("colorinventory", "textures/gui/container/inventory_transparent.png");
 
@@ -94,9 +96,46 @@ public class ColorInventoryMod {
     public static void onGuiPreRender(ScreenEvent.Render.Pre event) {
         if (!overlayEnabled) return;
 
-        if (event.getScreen() instanceof InventoryScreen && useTransparentInventory) {
-            // Cancel the default inventory rendering when using transparent inventory
-            event.setCanceled(true);
+        if (event.getScreen() instanceof InventoryScreen inventoryScreen) {
+            if (useTransparentInventory) {
+                event.setCanceled(true);
+            }
+
+            // Remove the vanilla recipe book button
+            Iterator<Renderable> iterator = inventoryScreen.renderables.iterator();
+            while (iterator.hasNext()) {
+                Renderable renderable = iterator.next();
+                if (renderable instanceof ImageButton) {
+                    ImageButton button = (ImageButton) renderable;
+                    int x = (inventoryScreen.width - 176) / 2;
+                    int y = (inventoryScreen.height - 166) / 2;
+                    if (button.getX() == x + 104 && button.getY() == y + 61) {
+                        iterator.remove();
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public static void onMouseClicked(ScreenEvent.MouseButtonPressed.Pre event) {
+        if (!overlayEnabled) return;
+
+        if (event.getScreen() instanceof InventoryScreen inventoryScreen) {
+            RecipeBookComponent recipeBook = inventoryScreen.getRecipeBookComponent();
+            int xOffset = recipeBook.isVisible() ? 77 : 0;
+            int x = (inventoryScreen.width - 176) / 2 + xOffset;
+            int y = (inventoryScreen.height - 166) / 2;
+            int buttonX = x + 104;
+            int buttonY = y + 61;
+
+            // Check if click is in vanilla recipe button area
+            if (event.getMouseX() >= buttonX && event.getMouseX() <= buttonX + 20 &&
+                    event.getMouseY() >= buttonY && event.getMouseY() <= buttonY + 18) {
+                // Cancel the vanilla click event
+                event.setCanceled(true);
+            }
         }
     }
 
