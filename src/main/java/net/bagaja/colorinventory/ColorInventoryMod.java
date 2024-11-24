@@ -35,7 +35,7 @@ public class ColorInventoryMod {
     private static final ResourceLocation INVENTORY_LOCATION =
             new ResourceLocation("textures/gui/container/inventory.png");
     private static final ResourceLocation RECIPE_BUTTON_LOCATION =
-            new ResourceLocation("textures/gui/sprites/recipe_book/button.png");
+            new ResourceLocation("colorinventory", "textures/gui/container/button_transparent.png");
     private static final ResourceLocation EMPTY_ARMOR_SLOT_HELMET =
             new ResourceLocation("textures/item/empty_armor_slot_helmet.png");
     private static final ResourceLocation EMPTY_ARMOR_SLOT_CHESTPLATE =
@@ -114,27 +114,6 @@ public class ColorInventoryMod {
                         break;
                     }
                 }
-            }
-        }
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void onMouseClicked(ScreenEvent.MouseButtonPressed.Pre event) {
-        if (!overlayEnabled) return;
-
-        if (event.getScreen() instanceof InventoryScreen inventoryScreen) {
-            RecipeBookComponent recipeBook = inventoryScreen.getRecipeBookComponent();
-            int xOffset = recipeBook.isVisible() ? 77 : 0;
-            int x = (inventoryScreen.width - 176) / 2 + xOffset;
-            int y = (inventoryScreen.height - 166) / 2;
-            int buttonX = x + 104;
-            int buttonY = y + 61;
-
-            // Check if click is in vanilla recipe button area
-            if (event.getMouseX() >= buttonX && event.getMouseX() <= buttonX + 20 &&
-                    event.getMouseY() >= buttonY && event.getMouseY() <= buttonY + 18) {
-                // Cancel the vanilla click event
-                event.setCanceled(true);
             }
         }
     }
@@ -269,5 +248,3 @@ public class ColorInventoryMod {
 // tool bar behind color layer
 // multiplayer message removing
 // add transparency
-
-// and third, is a possible to add a button that makes the inventory transparent so you have the slots, crafting 4 slots etc but the inv background is a bit transparent?
