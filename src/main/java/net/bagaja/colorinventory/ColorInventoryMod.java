@@ -26,6 +26,8 @@ public class ColorInventoryMod {
     public static final String MODID = "colorinventory";
     private static int inventoryColor = 0xFF0000; // Default red color
     private static boolean overlayEnabled = true; // Default enabled
+    private static float inventoryAlpha = 0.7f; // Default alpha value
+
     private static final ResourceLocation INVENTORY_LOCATION =
             new ResourceLocation("textures/gui/container/inventory.png");
     private static final ResourceLocation RECIPE_BUTTON_LOCATION =
@@ -52,6 +54,7 @@ public class ColorInventoryMod {
             GLFW.GLFW_KEY_O,
             "key.categories.colorinventory"
     );
+
     public ColorInventoryMod() {
         MinecraftForge.EVENT_BUS.register(this);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.SPEC);
@@ -65,6 +68,14 @@ public class ColorInventoryMod {
         return overlayEnabled;
     }
 
+    public static float getInventoryAlpha() {
+        return inventoryAlpha;
+    }
+
+    public static void setInventoryAlpha(float alpha) {
+        inventoryAlpha = alpha;
+        Config.saveAlpha(alpha);
+    }
 
     @SubscribeEvent
     public static void onGuiRender(ScreenEvent.Render.Post event) {
@@ -93,7 +104,7 @@ public class ColorInventoryMod {
                     ((inventoryColor >> 16) & 0xFF) / 255.0F,
                     ((inventoryColor >> 8) & 0xFF) / 255.0F,
                     (inventoryColor & 0xFF) / 255.0F,
-                    0.7F
+                    inventoryAlpha  // Use the configurable alpha value instead of hardcoded 0.7F
             );
 
             // Main inventory area
@@ -190,3 +201,9 @@ public class ColorInventoryMod {
         }
     }
 }
+
+// tool bar behind color layer
+// multiplayer message removing
+// add transparency
+
+// and third, is a possible to add a button that makes the inventory transparent so you have the slots, crafting 4 slots etc but the inv background is a bit transparent?

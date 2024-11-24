@@ -1,16 +1,9 @@
 package net.bagaja.colorinventory;
 
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
-import net.minecraftforge.registries.ForgeRegistries;
-
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Mod.EventBusSubscriber(modid = ColorInventoryMod.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class Config {
@@ -24,6 +17,12 @@ public class Config {
             .comment("Whether the color overlay is enabled")
             .define("colorOverlayEnabled", true);
 
+    private static final ForgeConfigSpec.DoubleValue INVENTORY_ALPHA = BUILDER
+            .comment("The alpha (transparency) value of the inventory overlay (0.0 - 1.0)")
+            .defineInRange("inventoryAlpha", 0.7, 0.0, 1.0);
+
+    public static float inventoryAlpha;
+
     static final ForgeConfigSpec SPEC = BUILDER.build();
 
     public static int inventoryColor;
@@ -36,6 +35,9 @@ public class Config {
         // Set the color when config loads
         ColorInventoryMod.setInventoryColor(inventoryColor);
         ColorInventoryMod.setOverlayEnabled(colorOverlayEnabled);
+
+        inventoryAlpha = INVENTORY_ALPHA.get().floatValue();
+        ColorInventoryMod.setInventoryAlpha(inventoryAlpha);
     }
 
     public static void saveColor(int color) {
@@ -46,5 +48,10 @@ public class Config {
     public static void saveOverlayEnabled(boolean enabled) {
         COLOR_OVERLAY_ENABLED.set(enabled);
         colorOverlayEnabled = enabled;
+    }
+
+    public static void saveAlpha(float alpha) {
+        INVENTORY_ALPHA.set((double)alpha);
+        inventoryAlpha = alpha;
     }
 }

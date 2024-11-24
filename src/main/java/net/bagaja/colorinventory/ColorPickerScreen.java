@@ -11,13 +11,17 @@ public class ColorPickerScreen extends Screen {
     private ColorSlider redSlider;
     private ColorSlider greenSlider;
     private ColorSlider blueSlider;
+    private ColorSlider alphaSlider;  // New alpha slider
     private int currentColor;
+    private float currentAlpha = 0.7f;  // Default alpha value
     private static final int DEFAULT_COLOR = 0xFF0000;
+    private static final float DEFAULT_ALPHA = 0.7f;
 
     public ColorPickerScreen(Screen lastScreen) {
         super(Component.literal("Color Picker"));
         this.lastScreen = lastScreen;
         this.currentColor = ColorInventoryMod.getInventoryColor();
+        this.currentAlpha = ColorInventoryMod.getInventoryAlpha();
     }
 
     private class ColorSlider extends Button {
@@ -38,7 +42,11 @@ public class ColorPickerScreen extends Screen {
         }
 
         private void updateMessage() {
-            setMessage(Component.literal(String.format("%s: %.0f", prefix, value)));
+            if (prefix.equals("Alpha")) {
+                setMessage(Component.literal(String.format("%s: %.2f", prefix, value)));
+            } else {
+                setMessage(Component.literal(String.format("%s: %.0f", prefix, value)));
+            }
         }
 
         @Override
@@ -74,23 +82,30 @@ public class ColorPickerScreen extends Screen {
 
         // Create RGB sliders using custom ColorSlider class
         this.redSlider = new ColorSlider(
-                centerX, this.height / 2 - 40, sliderWidth, 20,
+                centerX, this.height / 2 - 60, sliderWidth, 20,
                 "Red", (currentColor >> 16) & 0xFF, 0, 255
         );
 
         this.greenSlider = new ColorSlider(
-                centerX, this.height / 2, sliderWidth, 20,
+                centerX, this.height / 2 - 20, sliderWidth, 20,
                 "Green", (currentColor >> 8) & 0xFF, 0, 255
         );
 
         this.blueSlider = new ColorSlider(
-                centerX, this.height / 2 + 40, sliderWidth, 20,
+                centerX, this.height / 2 + 20, sliderWidth, 20,
                 "Blue", currentColor & 0xFF, 0, 255
+        );
+
+        // Add alpha slider
+        this.alphaSlider = new ColorSlider(
+                centerX, this.height / 2 + 60, sliderWidth, 20,
+                "Alpha", currentAlpha, 0, 1
         );
 
         this.addRenderableWidget(redSlider);
         this.addRenderableWidget(greenSlider);
         this.addRenderableWidget(blueSlider);
+        this.addRenderableWidget(alphaSlider);
 
         // Center the buttons
         int buttonWidth = 75;
@@ -102,14 +117,15 @@ public class ColorPickerScreen extends Screen {
         this.addRenderableWidget(Button.builder(Component.literal("Apply"), button -> {
             updateColor();
             ColorInventoryMod.setInventoryColor(currentColor);
-            ColorInventoryMod.setOverlayEnabled(true); // Enable overlay when applying color
+            ColorInventoryMod.setInventoryAlpha((float)alphaSlider.getValue());
+            ColorInventoryMod.setOverlayEnabled(true);
             this.minecraft.setScreen(lastScreen);
-        }).pos(buttonsStartX, this.height / 2 + 80).size(buttonWidth, 20).build());
+        }).pos(buttonsStartX, this.height / 2 + 100).size(buttonWidth, 20).build());
 
         // Reset button
         this.addRenderableWidget(Button.builder(Component.literal("Reset"), button -> {
             resetToDefault();
-        }).pos(buttonsStartX + buttonWidth + buttonSpacing, this.height / 2 + 80).size(buttonWidth, 20).build());
+        }).pos(buttonsStartX + buttonWidth + buttonSpacing, this.height / 2 + 100).size(buttonWidth, 20).build());
 
         // Toggle button
         this.addRenderableWidget(Button.builder(
@@ -118,19 +134,21 @@ public class ColorPickerScreen extends Screen {
                     ColorInventoryMod.toggleOverlay();
                     button.setMessage(Component.literal(ColorInventoryMod.isOverlayEnabled() ? "Disable" : "Enable"));
                 }
-        ).pos(buttonsStartX + (buttonWidth + buttonSpacing) * 2, this.height / 2 + 80).size(buttonWidth, 20).build());
+        ).pos(buttonsStartX + (buttonWidth + buttonSpacing) * 2, this.height / 2 + 100).size(buttonWidth, 20).build());
 
         // Cancel button
         this.addRenderableWidget(Button.builder(Component.literal("Cancel"), button -> {
             this.minecraft.setScreen(lastScreen);
-        }).pos(buttonsStartX + (buttonWidth + buttonSpacing) * 3, this.height / 2 + 80).size(buttonWidth, 20).build());
+        }).pos(buttonsStartX + (buttonWidth + buttonSpacing) * 3, this.height / 2 + 100).size(buttonWidth, 20).build());
     }
 
     private void resetToDefault() {
         redSlider.setValue((DEFAULT_COLOR >> 16) & 0xFF);
         greenSlider.setValue((DEFAULT_COLOR >> 8) & 0xFF);
         blueSlider.setValue(DEFAULT_COLOR & 0xFF);
+        alphaSlider.setValue(DEFAULT_ALPHA);
         currentColor = DEFAULT_COLOR;
+        currentAlpha = DEFAULT_ALPHA;
     }
 
     private void updateColor() {
@@ -153,14 +171,35 @@ public class ColorPickerScreen extends Screen {
 
         // Draw color preview
         int previewX = this.width / 2 - 50;
-        int previewY = this.height / 2 - 90;
+        int previewY = this.height / 2 - 110;
 
         // Draw white border
         graphics.fill(previewX - 1, previewY - 1, previewX + 101, previewY + 31, 0xFFFFFFFF);
 
-        // Draw the current color with full opacity
-        int colorWithAlpha = 0xFF000000 | currentColor; // Force full opacity
+        // Draw checkerboard pattern to show transparency
+        drawCheckerboardPattern(graphics, previewX, previewY, 100, 30);
+
+        // Draw the current color with current alpha
+        int alpha = (int)(alphaSlider.getValue() * 255);
+        int colorWithAlpha = (alpha << 24) | currentColor;
         graphics.fill(previewX, previewY, previewX + 100, previewY + 30, colorWithAlpha);
+    }
+
+    private void drawCheckerboardPattern(GuiGraphics graphics, int x, int y, int width, int height) {
+        int squareSize = 8;
+        boolean isWhite = true;
+
+        for (int i = 0; i < width; i += squareSize) {
+            for (int j = 0; j < height; j += squareSize) {
+                int color = isWhite ? 0xFFFFFFFF : 0xFFCCCCCC;
+                graphics.fill(x + i, y + j,
+                        Math.min(x + i + squareSize, x + width),
+                        Math.min(y + j + squareSize, y + height),
+                        color);
+                isWhite = !isWhite;
+            }
+            isWhite = !isWhite;
+        }
     }
 
     @Override

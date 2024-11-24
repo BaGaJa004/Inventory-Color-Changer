@@ -11,3 +11,9 @@
 /time set day
 /gamerule doDaylightCycle false
 /weather clear
+/time set day
+/gamerule doWeatherCycle false
+/time set day
+/gamerule doWeatherCycle true
+/weather clear
+/gamerule doWeatherCycle false
