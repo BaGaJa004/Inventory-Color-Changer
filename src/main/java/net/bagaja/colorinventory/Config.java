@@ -17,6 +17,10 @@ public class Config {
             .comment("Whether the color overlay is enabled")
             .define("colorOverlayEnabled", true);
 
+    private static final ForgeConfigSpec.BooleanValue USE_TRANSPARENT_INVENTORY = BUILDER
+            .comment("Whether to use the transparent inventory texture")
+            .define("useTransparentInventory", false);
+
     private static final ForgeConfigSpec.DoubleValue INVENTORY_ALPHA = BUILDER
             .comment("The alpha (transparency) value of the inventory overlay (0.0 - 1.0)")
             .defineInRange("inventoryAlpha", 0.7, 0.0, 1.0);
@@ -24,6 +28,8 @@ public class Config {
     public static float inventoryAlpha;
 
     static final ForgeConfigSpec SPEC = BUILDER.build();
+
+    public static boolean useTransparentInventory;
 
     public static int inventoryColor;
     public static boolean colorOverlayEnabled;
@@ -38,6 +44,9 @@ public class Config {
 
         inventoryAlpha = INVENTORY_ALPHA.get().floatValue();
         ColorInventoryMod.setInventoryAlpha(inventoryAlpha);
+
+        useTransparentInventory = USE_TRANSPARENT_INVENTORY.get();
+        ColorInventoryMod.setUseTransparentInventory(useTransparentInventory);
     }
 
     public static void saveColor(int color) {
@@ -53,5 +62,10 @@ public class Config {
     public static void saveAlpha(float alpha) {
         INVENTORY_ALPHA.set((double)alpha);
         inventoryAlpha = alpha;
+    }
+
+    public static void saveUseTransparentInventory(boolean useTransparent) {
+        USE_TRANSPARENT_INVENTORY.set(useTransparent);
+        useTransparentInventory = useTransparent;
     }
 }

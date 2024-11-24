@@ -1,6 +1,6 @@
 package net.bagaja.colorinventory;
 
-import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -27,6 +27,7 @@ public class ColorInventoryMod {
     private static int inventoryColor = 0xFF0000; // Default red color
     private static boolean overlayEnabled = true; // Default enabled
     private static float inventoryAlpha = 0.7f; // Default alpha value
+    private static boolean useTransparentInventory = false;
 
     private static final ResourceLocation INVENTORY_LOCATION =
             new ResourceLocation("textures/gui/container/inventory.png");
@@ -42,6 +43,9 @@ public class ColorInventoryMod {
             new ResourceLocation("textures/item/empty_armor_slot_boots.png");
     private static final ResourceLocation EMPTY_SLOT_SHIELD =
             new ResourceLocation("textures/item/empty_armor_slot_shield.png");
+
+    private static final ResourceLocation TRANSPARENT_INVENTORY_LOCATION =
+            new ResourceLocation("colorinventory", "textures/gui/container/inventory_transparent.png");
 
     public static final KeyMapping COLOR_PICKER_KEY = new KeyMapping(
             "key.colorinventory.picker",
@@ -77,6 +81,25 @@ public class ColorInventoryMod {
         Config.saveAlpha(alpha);
     }
 
+    public static void setUseTransparentInventory(boolean useTransparent) {
+        useTransparentInventory = useTransparent;
+        Config.saveUseTransparentInventory(useTransparent);
+    }
+
+    public static boolean isUsingTransparentInventory() {
+        return useTransparentInventory;
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public static void onGuiPreRender(ScreenEvent.Render.Pre event) {
+        if (!overlayEnabled) return;
+
+        if (event.getScreen() instanceof InventoryScreen && useTransparentInventory) {
+            // Cancel the default inventory rendering when using transparent inventory
+            event.setCanceled(true);
+        }
+    }
+
     @SubscribeEvent
     public static void onGuiRender(ScreenEvent.Render.Post event) {
         if (!overlayEnabled) return; // Skip rendering if overlay is disabled
@@ -108,8 +131,10 @@ public class ColorInventoryMod {
             );
 
             // Main inventory area
-            RenderSystem.setShaderTexture(0, INVENTORY_LOCATION);
-            graphics.blit(INVENTORY_LOCATION, x, y, 0, 0, 176, 166);
+            ResourceLocation textureToUse = useTransparentInventory ?
+                    TRANSPARENT_INVENTORY_LOCATION : INVENTORY_LOCATION;
+            RenderSystem.setShaderTexture(0, textureToUse);
+            graphics.blit(textureToUse, x, y, 0, 0, 176, 166);
 
             // Restore original color state
             RenderSystem.setShaderColor(prevColor[0], prevColor[1], prevColor[2], prevColor[3]);

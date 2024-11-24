@@ -110,7 +110,7 @@ public class ColorPickerScreen extends Screen {
         // Center the buttons
         int buttonWidth = 75;
         int buttonSpacing = 8;
-        int totalButtonsWidth = (buttonWidth * 4) + (buttonSpacing * 3);
+        int totalButtonsWidth = (buttonWidth * 5) + (buttonSpacing * 4); // Adjusted for 5 buttons
         int buttonsStartX = this.width / 2 - totalButtonsWidth / 2;
 
         // Apply button
@@ -136,10 +136,26 @@ public class ColorPickerScreen extends Screen {
                 }
         ).pos(buttonsStartX + (buttonWidth + buttonSpacing) * 2, this.height / 2 + 100).size(buttonWidth, 20).build());
 
-        // Cancel button
+        // Add the transparent inventory toggle button
+        this.addRenderableWidget(Button.builder(
+                        Component.literal(ColorInventoryMod.isUsingTransparentInventory() ?
+                                "Solid Inv" : "Trans Inv"),
+                        button -> {
+                            boolean newState = !ColorInventoryMod.isUsingTransparentInventory();
+                            ColorInventoryMod.setUseTransparentInventory(newState);
+                            button.setMessage(Component.literal(newState ?
+                                    "Solid Inv" : "Trans Inv"));
+                        }
+                ).pos(buttonsStartX + (buttonWidth + buttonSpacing) * 3, this.height / 2 + 100)
+                .size(buttonWidth, 20)
+                .build());
+
+        // Move the Cancel button to the end
         this.addRenderableWidget(Button.builder(Component.literal("Cancel"), button -> {
-            this.minecraft.setScreen(lastScreen);
-        }).pos(buttonsStartX + (buttonWidth + buttonSpacing) * 3, this.height / 2 + 100).size(buttonWidth, 20).build());
+                    this.minecraft.setScreen(lastScreen);
+                }).pos(buttonsStartX + (buttonWidth + buttonSpacing) * 4, this.height / 2 + 100)
+                .size(buttonWidth, 20)
+                .build());
     }
 
     private void resetToDefault() {
