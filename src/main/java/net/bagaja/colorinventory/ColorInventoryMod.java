@@ -1,5 +1,6 @@
 package net.bagaja.colorinventory;
 
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -37,6 +38,8 @@ public class ColorInventoryMod {
             new ResourceLocation("textures/item/empty_armor_slot_leggings.png");
     private static final ResourceLocation EMPTY_ARMOR_SLOT_BOOTS =
             new ResourceLocation("textures/item/empty_armor_slot_boots.png");
+    private static final ResourceLocation EMPTY_SLOT_SHIELD =
+            new ResourceLocation("textures/item/empty_armor_slot_shield.png");
 
     public static final KeyMapping COLOR_PICKER_KEY = new KeyMapping(
             "key.colorinventory.picker",
@@ -127,6 +130,12 @@ public class ColorInventoryMod {
                 if (Minecraft.getInstance().player.getInventory().getArmor(0).isEmpty()) {
                     RenderSystem.setShaderTexture(0, EMPTY_ARMOR_SLOT_BOOTS);
                     graphics.blit(EMPTY_ARMOR_SLOT_BOOTS, armorX, armorY + 54, 0, 0, 16, 16, 16, 16);
+                }
+
+                // Offhand slot
+                if (Minecraft.getInstance().player.getOffhandItem().isEmpty()) {
+                    RenderSystem.setShaderTexture(0, EMPTY_SLOT_SHIELD);
+                    graphics.blit(EMPTY_SLOT_SHIELD, x + 77, y + 62, 0, 0, 16, 16, 16, 16);
                 }
             }
 
