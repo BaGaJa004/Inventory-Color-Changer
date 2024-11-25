@@ -17,3 +17,4 @@
 /gamerule doWeatherCycle true
 /weather clear
 /gamerule doWeatherCycle false
+/enchant Dev minecraft:efficiency 4

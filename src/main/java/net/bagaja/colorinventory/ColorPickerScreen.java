@@ -13,7 +13,7 @@ public class ColorPickerScreen extends Screen {
     private ColorSlider blueSlider;
     private ColorSlider alphaSlider;  // New alpha slider
     private int currentColor;
-    private float currentAlpha = 0.7f;  // Default alpha value
+    private float currentAlpha;  // Default alpha value
     private static final int DEFAULT_COLOR = 0xFF0000;
     private static final float DEFAULT_ALPHA = 0.7f;
 
@@ -82,23 +82,22 @@ public class ColorPickerScreen extends Screen {
 
         // Create RGB sliders using custom ColorSlider class
         this.redSlider = new ColorSlider(
-                centerX, this.height / 2 - 60, sliderWidth, 20,
+                centerX, this.height / 2 - 45, sliderWidth, 20,
                 "Red", (currentColor >> 16) & 0xFF, 0, 255
         );
 
         this.greenSlider = new ColorSlider(
-                centerX, this.height / 2 - 20, sliderWidth, 20,
+                centerX, this.height / 2 - 15, sliderWidth, 20,
                 "Green", (currentColor >> 8) & 0xFF, 0, 255
         );
 
         this.blueSlider = new ColorSlider(
-                centerX, this.height / 2 + 20, sliderWidth, 20,
+                centerX, this.height / 2 + 15, sliderWidth, 20,
                 "Blue", currentColor & 0xFF, 0, 255
         );
 
-        // Add alpha slider
         this.alphaSlider = new ColorSlider(
-                centerX, this.height / 2 + 60, sliderWidth, 20,
+                centerX, this.height / 2 + 45, sliderWidth, 20,
                 "Alpha", currentAlpha, 0, 1
         );
 
@@ -110,7 +109,7 @@ public class ColorPickerScreen extends Screen {
         // Center the buttons
         int buttonWidth = 75;
         int buttonSpacing = 8;
-        int totalButtonsWidth = (buttonWidth * 5) + (buttonSpacing * 4); // Adjusted for 5 buttons
+        int totalButtonsWidth = (buttonWidth * 4) + (buttonSpacing * 3); // Adjusted for 4 buttons
         int buttonsStartX = this.width / 2 - totalButtonsWidth / 2;
 
         // Apply button
@@ -120,12 +119,12 @@ public class ColorPickerScreen extends Screen {
             ColorInventoryMod.setInventoryAlpha((float)alphaSlider.getValue());
             ColorInventoryMod.setOverlayEnabled(true);
             this.minecraft.setScreen(lastScreen);
-        }).pos(buttonsStartX, this.height / 2 + 100).size(buttonWidth, 20).build());
+        }).pos(buttonsStartX, this.height / 2 + 85).size(buttonWidth, 20).build());
 
         // Reset button
         this.addRenderableWidget(Button.builder(Component.literal("Reset"), button -> {
             resetToDefault();
-        }).pos(buttonsStartX + buttonWidth + buttonSpacing, this.height / 2 + 100).size(buttonWidth, 20).build());
+        }).pos(buttonsStartX + buttonWidth + buttonSpacing, this.height / 2 + 85).size(buttonWidth, 20).build());
 
         // Toggle button
         this.addRenderableWidget(Button.builder(
@@ -134,26 +133,17 @@ public class ColorPickerScreen extends Screen {
                     ColorInventoryMod.toggleOverlay();
                     button.setMessage(Component.literal(ColorInventoryMod.isOverlayEnabled() ? "Disable" : "Enable"));
                 }
-        ).pos(buttonsStartX + (buttonWidth + buttonSpacing) * 2, this.height / 2 + 100).size(buttonWidth, 20).build());
+        ).pos(buttonsStartX + (buttonWidth + buttonSpacing) * 2, this.height / 2 + 85).size(buttonWidth, 20).build());
+
 
         // Add the transparent inventory toggle button
-        this.addRenderableWidget(Button.builder(
-                        Component.literal(ColorInventoryMod.isUsingTransparentInventory() ?
-                                "Solid Inv" : "Trans Inv"),
-                        button -> {
-                            boolean newState = !ColorInventoryMod.isUsingTransparentInventory();
-                            ColorInventoryMod.setUseTransparentInventory(newState);
-                            button.setMessage(Component.literal(newState ?
-                                    "Solid Inv" : "Trans Inv"));
-                        }
-                ).pos(buttonsStartX + (buttonWidth + buttonSpacing) * 3, this.height / 2 + 100)
-                .size(buttonWidth, 20)
-                .build());
+        // Here was the transparency removed and is at the bottom of these file
 
+        
         // Move the Cancel button to the end
         this.addRenderableWidget(Button.builder(Component.literal("Cancel"), button -> {
                     this.minecraft.setScreen(lastScreen);
-                }).pos(buttonsStartX + (buttonWidth + buttonSpacing) * 4, this.height / 2 + 100)
+                }).pos(buttonsStartX + (buttonWidth + buttonSpacing) * 3, this.height / 2 + 85)
                 .size(buttonWidth, 20)
                 .build());
     }
@@ -223,3 +213,16 @@ public class ColorPickerScreen extends Screen {
         return true;
     }
 }
+
+//   this.addRenderableWidget(Button.builder(
+//                        Component.literal(ColorInventoryMod.isUsingTransparentInventory() ?
+//                                "Solid Inv" : "Trans Inv"),
+//                        button -> {
+//                            boolean newState = !ColorInventoryMod.isUsingTransparentInventory();
+//                            ColorInventoryMod.setUseTransparentInventory(newState);
+//                            button.setMessage(Component.literal(newState ?
+//                                    "Solid Inv" : "Trans Inv"));
+//                        }
+//                ).pos(buttonsStartX + (buttonWidth + buttonSpacing) * 3, this.height / 2 + 100)
+//                .size(buttonWidth, 20)
+//                .build());
