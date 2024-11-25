@@ -246,5 +246,4 @@ public class ColorInventoryMod {
 }
 
 // tool bar behind color layer
-// multiplayer message removing
 // add transparency
