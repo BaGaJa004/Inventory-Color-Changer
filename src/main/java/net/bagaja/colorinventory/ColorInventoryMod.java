@@ -3,6 +3,7 @@ package net.bagaja.colorinventory;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -13,6 +14,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraft.client.KeyMapping;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.lwjgl.glfw.GLFW;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
@@ -22,6 +24,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 import java.util.Iterator;
+
+import static net.bagaja.colorinventory.KeyBindings.COLOR_PICKER_KEY;
+import static net.bagaja.colorinventory.KeyBindings.TOGGLE_OVERLAY_KEY;
 
 @Mod("colorinventory")
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.FORGE)
@@ -49,19 +54,9 @@ public class ColorInventoryMod {
     private static final ResourceLocation TRANSPARENT_INVENTORY_LOCATION =
             new ResourceLocation("colorinventory", "textures/gui/container/inventory_transparent.png");
 
-    public static final KeyMapping COLOR_PICKER_KEY = new KeyMapping(
-            "key.colorinventory.picker",
-            GLFW.GLFW_KEY_P,
-            "key.categories.colorinventory"
-    );
-
-    public static final KeyMapping TOGGLE_OVERLAY_KEY = new KeyMapping(
-            "key.colorinventory.toggle",
-            GLFW.GLFW_KEY_O,
-            "key.categories.colorinventory"
-    );
 
     public ColorInventoryMod() {
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         MinecraftForge.EVENT_BUS.register(this);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.SPEC);
     }
@@ -226,19 +221,13 @@ public class ColorInventoryMod {
     }
 
     @SubscribeEvent
-    public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
-        event.register(COLOR_PICKER_KEY);
-        event.register(TOGGLE_OVERLAY_KEY);
-    }
-
-    @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.END) {
             Minecraft minecraft = Minecraft.getInstance();
-            if (COLOR_PICKER_KEY.consumeClick() && minecraft.player != null) {
+            if (KeyBindings.COLOR_PICKER_KEY.consumeClick() && minecraft.player != null) {
                 minecraft.setScreen(new ColorPickerScreen(minecraft.screen));
             }
-            if (TOGGLE_OVERLAY_KEY.consumeClick() && minecraft.player != null) {
+            if (KeyBindings.TOGGLE_OVERLAY_KEY.consumeClick() && minecraft.player != null) {
                 toggleOverlay();
             }
         }
